@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons.function;
 
 import java.io.IOException;
@@ -34,28 +33,26 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface IOSupplier<T> {
 
-	/**
-	 * Wraps the given {@link Supplier} into an {@link IOSupplier}.
-	 *
-	 * <p>This method adapts a standard Java {@link Supplier} into an {@link IOSupplier}.
-	 * The original {@link Supplier}'s {@link Supplier#get()} method is used as the implementation.</p>
-	 *
-	 * @param supplier The original supplier to be wrapped
-	 * @param <T> The type of the supplied value
-	 * @return A new {@link IOSupplier} wrapping the provided supplier
-	 * @throws NullPointerException if the supplier is {@code null}
-	 */
-	static <T> IOSupplier<T> wrap(Supplier<? extends T> supplier) {
-		Objects.requireNonNull(supplier, "Supplier must not be null");
-		return supplier::get;
-	}
+    /**
+     * Wraps the given {@link Supplier} into an {@link IOSupplier}.
+     *
+     * <p>This method adapts a standard Java {@link Supplier} into an {@link IOSupplier}.
+     * The original {@link Supplier}'s {@link Supplier#get()} method is used as the implementation.</p>
+     *
+     * @param supplier The original supplier to be wrapped
+     * @param <T> The type of the supplied value
+     * @return A new {@link IOSupplier} wrapping the provided supplier
+     * @throws NullPointerException if the supplier is {@code null}
+     */
+    static <T> IOSupplier<T> wrap(Supplier<? extends T> supplier) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Supplies a value, potentially throwing an {@link IOException}.
-	 *
-	 * @return The supplied value
-	 * @throws IOException If an I/O error occurs
-	 */
-	T get() throws IOException;
-
+    /**
+     * Supplies a value, potentially throwing an {@link IOException}.
+     *
+     * @return The supplied value
+     * @throws IOException If an I/O error occurs
+     */
+    T get() throws IOException;
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons;
 
 import java.io.IOException;
@@ -33,130 +32,73 @@ import java.util.Optional;
  */
 public class UrlResource implements Resource {
 
-	private final URL url;
+    private final URL url;
 
-	/**
-	 * Constructs a new {@link UrlResource} with the specified URL.
-	 *
-	 * @param url the {@link URL}
-	 */
-	public UrlResource(URL url) {
-		Objects.requireNonNull(url, "URL must not be null");
-		this.url = url;
-	}
+    /**
+     * Constructs a new {@link UrlResource} with the specified URL.
+     *
+     * @param url the {@link URL}
+     */
+    public UrlResource(URL url) {
+        Objects.requireNonNull(url, "URL must not be null");
+        this.url = url;
+    }
 
-	@Override
-	public Optional<String> getFileName() {
-		if (isFile()) {
-			try {
-				return getFile().getFileName();
-			}
-			catch (IOException ex) {
-				return Optional.empty();
-			}
-		}
-		String file = this.url.getFile();
-		if (!StringUtils.hasText(file)) {
-			return Optional.empty();
-		}
-		int lastIndexOf = file.lastIndexOf('/');
-		return (lastIndexOf != -1) ? Optional.of(file.substring(lastIndexOf + 1)) : Optional.of(file);
-	}
+    @Override
+    public Optional<String> getFileName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean exists() {
-		if (isFile()) {
-			try {
-				return getFile().exists();
-			}
-			catch (IOException ex) {
-				return false;
-			}
-		}
-		return isReadable() || isWritable();
-	}
+    @Override
+    public boolean exists() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isWritable() {
-		try {
-			if (isFile()) {
-				return getFile().isWritable();
-			}
-			getOutputStream().close();
-			return true;
-		}
-		catch (IOException ex) {
-			return false;
-		}
-	}
+    @Override
+    public boolean isWritable() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isReadable() {
-		try {
-			if (isFile()) {
-				return getFile().isReadable();
-			}
-			getInputStream().close();
-			return true;
-		}
-		catch (IOException ex) {
-			return false;
-		}
-	}
+    @Override
+    public boolean isReadable() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public InputStream getInputStream() throws IOException {
-		if (isFile()) {
-			return getFile().getInputStream();
-		}
-		URLConnection connection = this.url.openConnection();
-		connection.setDoInput(true);
-		return connection.getInputStream();
-	}
+    @Override
+    public InputStream getInputStream() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public OutputStream getOutputStream() throws IOException {
-		if (isFile()) {
-			return getFile().getOutputStream();
-		}
-		URLConnection connection = this.url.openConnection();
-		connection.setDoOutput(true);
-		return connection.getOutputStream();
-	}
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public URL toURL() {
-		return this.url;
-	}
+    @Override
+    public URL toURL() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (other == null || getClass() != other.getClass()) {
-			return false;
-		}
-		UrlResource that = (UrlResource) other;
-		return this.url.equals(that.url);
-	}
+    @Override
+    public boolean equals(Object other) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int hashCode() {
-		return this.url.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public String toString() {
-		return "UrlResource{" + "url=" + this.url + '}';
-	}
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private boolean isFile() {
-		return "file".equals(this.url.getProtocol());
-	}
+    private boolean isFile() {
+        return "file".equals(this.url.getProtocol());
+    }
 
-	private FileSystemResource getFile() throws IOException {
-		return new FileSystemResource(Paths.get(toURI()));
-	}
-
+    private FileSystemResource getFile() throws IOException {
+        return new FileSystemResource(Paths.get(toURI()));
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.cql;
 
 import java.util.Objects;
@@ -26,49 +25,41 @@ import java.util.Objects;
  */
 public class StringCqlScript extends AbstractCqlScript {
 
-	private final String script;
+    private final String script;
 
-	/**
-	 * Constructs a new {@link StringCqlScript} using the given CQL script.
-	 *
-	 * @param script the CQL script as a string (must not be {@code null})
-	 * @throws NullPointerException if {@code script} is {@code null}
-	 */
-	public StringCqlScript(String script) {
-		Objects.requireNonNull(script, "Script must not be null");
-		this.script = script;
-	}
+    /**
+     * Constructs a new {@link StringCqlScript} using the given CQL script.
+     *
+     * @param script the CQL script as a string (must not be {@code null})
+     * @throws NullPointerException if {@code script} is {@code null}
+     */
+    public StringCqlScript(String script) {
+        Objects.requireNonNull(script, "Script must not be null");
+        this.script = script;
+    }
 
-	/**
-	 * Retrieves the raw CQL script as a string.
-	 *
-	 * @return the raw CQL script as a string
-	 */
-	@Override
-	protected String getScript() {
-		return this.script;
-	}
+    /**
+     * Retrieves the raw CQL script as a string.
+     *
+     * @return the raw CQL script as a string
+     */
+    @Override
+    protected String getScript() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (other == null || getClass() != other.getClass()) {
-			return false;
-		}
-		StringCqlScript that = (StringCqlScript) other;
-		return this.script.equals(that.script);
-	}
+    @Override
+    public boolean equals(Object other) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int hashCode() {
-		return this.script.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public String toString() {
-		return "StringCqlScript{" + "script='" + this.script + '\'' + '}';
-	}
-
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

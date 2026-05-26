@@ -60,3 +60,8 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
+
+.aider*
+logs/
+.commit0_scripts/
+.github/workflows/

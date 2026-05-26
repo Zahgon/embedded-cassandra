@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra;
 
 import java.io.FileNotFoundException;
@@ -41,14 +40,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
-
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.github.nosan.embedded.cassandra.commons.FileLock;
 import com.github.nosan.embedded.cassandra.commons.FileUtils;
 import com.github.nosan.embedded.cassandra.commons.StreamUtils;
@@ -70,379 +67,261 @@ import com.github.nosan.embedded.cassandra.commons.web.JdkHttpClient;
  */
 public class WebCassandraDirectoryProvider implements CassandraDirectoryProvider {
 
-	protected static final String[] ALGORITHMS = {"SHA-512", "SHA-256", "SHA-1", "MD5"};
+    protected static final String[] ALGORITHMS = { "SHA-512", "SHA-256", "SHA-1", "MD5" };
 
-	private static final Logger log = LoggerFactory.getLogger(WebCassandraDirectoryProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(WebCassandraDirectoryProvider.class);
 
-	private final HttpClient httpClient;
+    private final HttpClient httpClient;
 
-	private final Path downloadDirectory;
+    private final Path downloadDirectory;
 
-	/**
-	 * Creates a new {@link WebCassandraDirectoryProvider} with {@link JdkHttpClient} and {@code user.home} directory.
-	 */
-	public WebCassandraDirectoryProvider() {
-		this(new JdkHttpClient(), Paths.get(System.getProperty("user.home")));
-	}
+    /**
+     * Creates a new {@link WebCassandraDirectoryProvider} with {@link JdkHttpClient} and {@code user.home} directory.
+     */
+    public WebCassandraDirectoryProvider() {
+        this(new JdkHttpClient(), Paths.get(System.getProperty("user.home")));
+    }
 
-	/**
-	 * Creates a new {@link WebCassandraDirectoryProvider} with provided {@link HttpClient}  and {@code user.home}
-	 * directory.
-	 *
-	 * @param httpClient http client to use
-	 */
-	public WebCassandraDirectoryProvider(HttpClient httpClient) {
-		this(httpClient, Paths.get(System.getProperty("user.home")));
-	}
+    /**
+     * Creates a new {@link WebCassandraDirectoryProvider} with provided {@link HttpClient}  and {@code user.home}
+     * directory.
+     *
+     * @param httpClient http client to use
+     */
+    public WebCassandraDirectoryProvider(HttpClient httpClient) {
+        this(httpClient, Paths.get(System.getProperty("user.home")));
+    }
 
-	/**
-	 * Creates a new {@link WebCassandraDirectoryProvider} with {@link JdkHttpClient} and provided download directory.
-	 *
-	 * @param downloadDirectory the download directory
-	 */
-	public WebCassandraDirectoryProvider(Path downloadDirectory) {
-		this(new JdkHttpClient(), downloadDirectory);
-	}
+    /**
+     * Creates a new {@link WebCassandraDirectoryProvider} with {@link JdkHttpClient} and provided download directory.
+     *
+     * @param downloadDirectory the download directory
+     */
+    public WebCassandraDirectoryProvider(Path downloadDirectory) {
+        this(new JdkHttpClient(), downloadDirectory);
+    }
 
-	/**
-	 * Creates a new {@link WebCassandraDirectoryProvider} with provided {@link HttpClient} and download directory.
-	 *
-	 * @param httpClient http client to use
-	 * @param downloadDirectory the download directory
-	 */
-	public WebCassandraDirectoryProvider(HttpClient httpClient, Path downloadDirectory) {
-		Objects.requireNonNull(httpClient, "HTTP Client must not be null");
-		Objects.requireNonNull(downloadDirectory, "Download Directory must not be null");
-		this.httpClient = httpClient;
-		this.downloadDirectory = downloadDirectory;
-	}
+    /**
+     * Creates a new {@link WebCassandraDirectoryProvider} with provided {@link HttpClient} and download directory.
+     *
+     * @param httpClient http client to use
+     * @param downloadDirectory the download directory
+     */
+    public WebCassandraDirectoryProvider(HttpClient httpClient, Path downloadDirectory) {
+        Objects.requireNonNull(httpClient, "HTTP Client must not be null");
+        Objects.requireNonNull(downloadDirectory, "Download Directory must not be null");
+        this.httpClient = httpClient;
+        this.downloadDirectory = downloadDirectory;
+    }
 
-	@Override
-	public final Path getDirectory(Version version) throws IOException {
-		Objects.requireNonNull(version, "Version must not be null");
-		Path downloadDirectory = this.downloadDirectory.resolve(".embedded-cassandra").resolve(version.toString());
+    @Override
+    public final Path getDirectory(Version version) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		Path successFile = downloadDirectory.resolve(".success").normalize().toAbsolutePath();
-		Path cassandraDirectory = downloadDirectory.resolve(String.format("apache-cassandra-%s", version))
-				.normalize().toAbsolutePath();
+    /**
+     * Gets Cassandra packages to download.
+     * <p>Subclasses may override this method and return their packages to download.
+     *
+     * @param version Cassandra version
+     * @return the list of packages
+     */
+    protected List<CassandraPackage> getCassandraPackages(Version version) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		if (Files.exists(successFile) && Files.exists(cassandraDirectory)) {
-			return cassandraDirectory;
-		}
-		log.info("Cassandra directory: ''{}'' is not found. Initializing...", cassandraDirectory);
-		Files.createDirectories(downloadDirectory);
-		Path lockFile = downloadDirectory.resolve(".lock").normalize().toAbsolutePath();
+    /**
+     * Acquires an exclusive lock on the file.
+     * <p>Subclasses may override this method to change {@code tryLock} timeout.
+     *
+     * @param fileLock the file lock
+     * @return true if lock has been acquired otherwise false
+     * @throws IOException If some other I/O error occurs
+     */
+    protected boolean tryLock(FileLock fileLock) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		try (FileLock fileLock = FileLock.of(lockFile)) {
-			log.info("Acquires a lock to the file ''{}''...", lockFile);
-			if (!tryLock(fileLock)) {
-				throw new IOException(String.format("Unable to provide Cassandra Directory for a version: '%s'."
-						+ " File lock could not be acquired for a file: '%s'", version, lockFile));
-			}
+    /**
+     * Downloads the archive file from the provided URI and writes it into the provided output stream.
+     * <p>Subclasses may override this method and implement their logic for downloading.
+     *
+     * @param os the output stream to write from URI
+     * @param version Cassandra version
+     * @param httpClient Http client to use
+     * @param uri the URI to the file to download
+     * @throws IOException an I/O error occurs or if it is not possible to download.
+     */
+    protected void download(HttpClient httpClient, Version version, URI uri, OutputStream os) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			if (Files.exists(successFile) && Files.exists(cassandraDirectory)) {
-				return cassandraDirectory;
-			}
+    /**
+     * Extracts the given archive file into the given destination directory.
+     * <p>Subclasses may override this method and implement their logic for extraction.
+     *
+     * @param archiveFile the archive file to extract
+     * @param destination the directory to which to extract the files (already created)
+     * @throws IOException an I/O error occurs
+     */
+    protected void extract(Path archiveFile, Path destination) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			List<CassandraPackage> cassandraPackages = getCassandraPackages(version);
-			if (cassandraPackages.isEmpty()) {
-				throw new FileNotFoundException(String.format("Unable to provide Cassandra Directory"
-						+ " for a version: '%s'. No Packages!", version));
-			}
-			List<Exception> failures = new ArrayList<>();
-			for (CassandraPackage cassandraPackage : cassandraPackages) {
-				try {
-					downloadAndExtract(version, downloadDirectory, cassandraDirectory, cassandraPackage);
-					if (!Thread.currentThread().isInterrupted()) {
-						Files.write(successFile, Collections.singleton(ZonedDateTime.now().toString()));
-					}
-					log.info("Cassandra directory: ''{}'' is initialized.", cassandraDirectory);
-					return cassandraDirectory;
-				}
-				catch (Exception ex) {
-					failures.add(ex);
-				}
-			}
-			StringBuilder builder = new StringBuilder("Unable to provide Cassandra Directory for a version: '")
-					.append(version).append("'").append(System.lineSeparator());
-			for (Exception failure : failures) {
-				StringWriter writer = new StringWriter();
-				failure.printStackTrace(new PrintWriter(writer));
-				builder.append(writer).append(System.lineSeparator());
-			}
-			throw new IOException(builder.substring(0, builder.length() - System.lineSeparator().length()));
-		}
-	}
+    /**
+     * Creates the ArchiveInputStream for a given archive file.
+     *
+     * @param archiveFile the archive file
+     * @return the input stream to use
+     * @throws IOException an I/O error occurs
+     */
+    protected ArchiveInputStream<? extends ArchiveEntry> createArchiveInputStream(Path archiveFile) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Gets Cassandra packages to download.
-	 * <p>Subclasses may override this method and return their packages to download.
-	 *
-	 * @param version Cassandra version
-	 * @return the list of packages
-	 */
-	protected List<CassandraPackage> getCassandraPackages(Version version) {
-		List<CassandraPackage> packages = new ArrayList<>();
-		packages.add(createPackage(String.format("apache-cassandra-%1$s-bin.tar.gz", version),
-				String.format("https://downloads.apache.org/cassandra"
-						+ "/%1$s/apache-cassandra-%1$s-bin.tar.gz", version)));
-		packages.add(createPackage(String.format("apache-cassandra-%1$s-bin.tar.gz", version),
-				String.format("https://archive.apache.org/dist/cassandra/%1$s/"
-						+ "apache-cassandra-%1$s-bin.tar.gz", version)));
-		return packages;
-	}
+    private void downloadAndExtract(Version version, Path downloadDirectory, Path cassandraDirectory, CassandraPackage cassandraPackage) throws IOException, NoSuchAlgorithmException {
+        Path downloadFile = Files.createTempFile(downloadDirectory, "", "-" + cassandraPackage.getName()).normalize().toAbsolutePath();
+        try (OutputStream outputStream = Files.newOutputStream(downloadFile, StandardOpenOption.WRITE)) {
+            download(this.httpClient, version, cassandraPackage.getUri(), outputStream);
+            verifyChecksums(this.httpClient, downloadFile, cassandraPackage);
+            Path extractDirectory = Files.createTempDirectory(downloadDirectory, String.format("apache-cassandra-%s-", version)).normalize().toAbsolutePath();
+            try {
+                log.info("Extracting...");
+                extract(downloadFile, extractDirectory);
+                Path cassandraHome = findCassandraHome(extractDirectory);
+                FileUtils.copy(cassandraHome, cassandraDirectory, StandardCopyOption.REPLACE_EXISTING);
+            } finally {
+                deleteSilently(extractDirectory);
+            }
+        } finally {
+            deleteSilently(downloadFile);
+        }
+    }
 
-	/**
-	 * Acquires an exclusive lock on the file.
-	 * <p>Subclasses may override this method to change {@code tryLock} timeout.
-	 *
-	 * @param fileLock the file lock
-	 * @return true if lock has been acquired otherwise false
-	 * @throws IOException If some other I/O error occurs
-	 */
-	protected boolean tryLock(FileLock fileLock) throws IOException {
-		return fileLock.tryLock(5, TimeUnit.MINUTES);
-	}
+    private void verifyChecksums(HttpClient httpClient, Path archiveFile, CassandraPackage cassandraPackage) throws IOException, NoSuchAlgorithmException {
+        log.info("Verifying checksum...");
+        Map<String, URI> checksums = cassandraPackage.getChecksums();
+        if (checksums.isEmpty()) {
+            log.warn("No checksum defined for ''{}'', skipping verification.", cassandraPackage.getName());
+            return;
+        }
+        for (Map.Entry<String, URI> checksum : checksums.entrySet()) {
+            String algo = checksum.getKey();
+            URI uri = checksum.getValue();
+            try (HttpResponse response = httpClient.send(new HttpRequest(uri))) {
+                if (response.getStatus() == 200) {
+                    String expected;
+                    try (InputStream stream = response.getInputStream()) {
+                        expected = StreamUtils.toString(stream, Charset.defaultCharset()).trim();
+                    }
+                    String[] tokens = expected.split("\\s+");
+                    String actual = FileUtils.checksum(archiveFile, algo);
+                    if (tokens.length == 2) {
+                        verify(actual + " " + cassandraPackage.getName(), tokens[0] + " " + tokens[1]);
+                    } else {
+                        verify(actual, tokens[0]);
+                    }
+                    log.info("Checksums are identical");
+                    return;
+                }
+            }
+        }
+        log.warn("No checksum downloaded for ''{}'', skipping verification.", cassandraPackage.getName());
+    }
 
-	/**
-	 * Downloads the archive file from the provided URI and writes it into the provided output stream.
-	 * <p>Subclasses may override this method and implement their logic for downloading.
-	 *
-	 * @param os the output stream to write from URI
-	 * @param version Cassandra version
-	 * @param httpClient Http client to use
-	 * @param uri the URI to the file to download
-	 * @throws IOException an I/O error occurs or if it is not possible to download.
-	 */
-	protected void download(HttpClient httpClient, Version version, URI uri, OutputStream os) throws IOException {
-		try (HttpResponse response = httpClient.send(new HttpRequest(uri))) {
-			if (response.getStatus() == 200) {
-				log.info("Downloading Apache Cassandra: ''{}'' from URI: ''{}''."
-						+ " It takes a while...", version, response.getUri());
-				long totalBytes = response.getHeaders().getFirst("Content-Length")
-						.map(Long::parseLong).orElse(-1L);
-				long readBytes = 0;
-				int lastPercent = 0;
-				byte[] buffer = new byte[8192];
-				try (InputStream is = response.getInputStream()) {
-					int read;
-					while ((read = is.read(buffer)) != -1) {
-						os.write(buffer, 0, read);
-						if (totalBytes > 0) {
-							readBytes += read;
-							int percent = (int) (readBytes * 100 / totalBytes);
-							if (percent - lastPercent >= 10 || percent == 100) {
-								log.info("{} / {} {}%", readBytes, totalBytes, percent);
-								lastPercent = percent;
-							}
-						}
-					}
-				}
-			}
-			else {
-				throw new FileNotFoundException(String.format("Could not download a file. Error: %s", response));
-			}
-		}
-	}
+    private void verify(String actual, String expected) {
+        if (!actual.equalsIgnoreCase(expected)) {
+            throw new IllegalStateException(String.format("Checksum mismatch. " + "Actual: '%s' Expected: '%s'", actual, expected));
+        }
+    }
 
-	/**
-	 * Extracts the given archive file into the given destination directory.
-	 * <p>Subclasses may override this method and implement their logic for extraction.
-	 *
-	 * @param archiveFile the archive file to extract
-	 * @param destination the directory to which to extract the files (already created)
-	 * @throws IOException an I/O error occurs
-	 */
-	protected void extract(Path archiveFile, Path destination) throws IOException {
-		try (ArchiveInputStream<? extends ArchiveEntry> archiveInputStream = createArchiveInputStream(archiveFile)) {
-			ArchiveEntry entry;
-			while ((entry = archiveInputStream.getNextEntry()) != null) {
-				Path entryPath = destination.resolve(entry.getName()).normalize().toAbsolutePath();
-				if (!entryPath.startsWith(destination)) {
-					throw new IOException("Bad zip entry [" + entry.getName() + "]");
-				}
-				if (entry.isDirectory()) {
-					Files.createDirectories(entryPath);
-				}
-				else {
-					Path parent = entryPath.getParent();
-					if (!Files.exists(parent)) {
-						Files.createDirectories(parent);
-					}
-					Files.copy(archiveInputStream, entryPath, StandardCopyOption.REPLACE_EXISTING);
-				}
-			}
-		}
-	}
+    private Path findCassandraHome(Path directory) throws IOException {
+        try (Stream<Path> stream = Files.find(directory, 5, this::isCassandraHome)) {
+            return stream.findFirst().orElseThrow(() -> new IllegalStateException("Could not find Apache Cassandra directory in directory: '" + directory + "'"));
+        }
+    }
 
-	/**
-	 * Creates the ArchiveInputStream for a given archive file.
-	 *
-	 * @param archiveFile the archive file
-	 * @return the input stream to use
-	 * @throws IOException an I/O error occurs
-	 */
-	protected ArchiveInputStream<? extends ArchiveEntry> createArchiveInputStream(Path archiveFile) throws IOException {
-		return new TarArchiveInputStream(new GzipCompressorInputStream(Files.newInputStream(archiveFile)));
-	}
+    private boolean isCassandraHome(Path path, BasicFileAttributes attributes) {
+        if (attributes.isDirectory()) {
+            return Files.isDirectory(path.resolve("bin")) && Files.isDirectory(path.resolve("lib")) && Files.isDirectory(path.resolve("conf"));
+        }
+        return false;
+    }
 
-	private void downloadAndExtract(Version version, Path downloadDirectory, Path cassandraDirectory,
-			CassandraPackage cassandraPackage) throws IOException, NoSuchAlgorithmException {
-		Path downloadFile = Files.createTempFile(downloadDirectory, "", "-" + cassandraPackage.getName())
-				.normalize().toAbsolutePath();
-		try (OutputStream outputStream = Files.newOutputStream(downloadFile, StandardOpenOption.WRITE)) {
-			download(this.httpClient, version, cassandraPackage.getUri(), outputStream);
-			verifyChecksums(this.httpClient, downloadFile, cassandraPackage);
-			Path extractDirectory = Files.createTempDirectory(downloadDirectory,
-					String.format("apache-cassandra-%s-", version)).normalize().toAbsolutePath();
-			try {
-				log.info("Extracting...");
-				extract(downloadFile, extractDirectory);
-				Path cassandraHome = findCassandraHome(extractDirectory);
-				FileUtils.copy(cassandraHome, cassandraDirectory, StandardCopyOption.REPLACE_EXISTING);
-			}
-			finally {
-				deleteSilently(extractDirectory);
-			}
-		}
-		finally {
-			deleteSilently(downloadFile);
-		}
-	}
+    private static CassandraPackage createPackage(String name, String uri) {
+        Map<String, URI> checksums = new LinkedHashMap<>();
+        for (String algo : ALGORITHMS) {
+            checksums.put(algo, URI.create(String.format("%s.%s", uri, algo.toLowerCase(Locale.ENGLISH).replace("-", ""))));
+        }
+        return new CassandraPackage(name, URI.create(uri), checksums);
+    }
 
-	private void verifyChecksums(HttpClient httpClient, Path archiveFile, CassandraPackage cassandraPackage)
-			throws IOException, NoSuchAlgorithmException {
-		log.info("Verifying checksum...");
-		Map<String, URI> checksums = cassandraPackage.getChecksums();
-		if (checksums.isEmpty()) {
-			log.warn("No checksum defined for ''{}'', skipping verification.", cassandraPackage.getName());
-			return;
-		}
-		for (Map.Entry<String, URI> checksum : checksums.entrySet()) {
-			String algo = checksum.getKey();
-			URI uri = checksum.getValue();
-			try (HttpResponse response = httpClient.send(new HttpRequest(uri))) {
-				if (response.getStatus() == 200) {
-					String expected;
-					try (InputStream stream = response.getInputStream()) {
-						expected = StreamUtils.toString(stream, Charset.defaultCharset()).trim();
-					}
-					String[] tokens = expected.split("\\s+");
-					String actual = FileUtils.checksum(archiveFile, algo);
-					if (tokens.length == 2) {
-						verify(actual + " " + cassandraPackage.getName(), tokens[0] + " " + tokens[1]);
-					}
-					else {
-						verify(actual, tokens[0]);
-					}
-					log.info("Checksums are identical");
-					return;
-				}
-			}
-		}
-		log.warn("No checksum downloaded for ''{}'', skipping verification.", cassandraPackage.getName());
-	}
+    private static void deleteSilently(Path path) {
+        try {
+            FileUtils.delete(path);
+        } catch (Exception ex) {
+            //ignore
+        }
+    }
 
-	private void verify(String actual, String expected) {
-		if (!actual.equalsIgnoreCase(expected)) {
-			throw new IllegalStateException(String.format("Checksum mismatch. "
-					+ "Actual: '%s' Expected: '%s'", actual, expected));
-		}
-	}
+    /**
+     * Represents Cassandra package to download.
+     */
+    protected static final class CassandraPackage {
 
-	private Path findCassandraHome(Path directory) throws IOException {
-		try (Stream<Path> stream = Files.find(directory, 5, this::isCassandraHome)) {
-			return stream.findFirst().orElseThrow(() -> new IllegalStateException(
-					"Could not find Apache Cassandra directory in directory: '" + directory + "'"));
-		}
-	}
+        private final String name;
 
-	private boolean isCassandraHome(Path path, BasicFileAttributes attributes) {
-		if (attributes.isDirectory()) {
-			return Files.isDirectory(path.resolve("bin")) && Files.isDirectory(path.resolve("lib"))
-					&& Files.isDirectory(path.resolve("conf"));
-		}
-		return false;
-	}
+        private final URI uri;
 
-	private static CassandraPackage createPackage(String name, String uri) {
-		Map<String, URI> checksums = new LinkedHashMap<>();
-		for (String algo : ALGORITHMS) {
-			checksums.put(algo, URI.create(String.format("%s.%s", uri,
-					algo.toLowerCase(Locale.ENGLISH).replace("-", ""))));
-		}
-		return new CassandraPackage(name, URI.create(uri), checksums);
-	}
+        private final Map<String, URI> checksums;
 
-	private static void deleteSilently(Path path) {
-		try {
-			FileUtils.delete(path);
-		}
-		catch (Exception ex) {
-			//ignore
-		}
-	}
+        /**
+         * Creates {@link CassandraPackage}.
+         *
+         * @param name the name of the package.
+         * <pre>apache-cassandra-4.0.1-bin.tar.gz</pre>
+         * @param uri the URI to the package to download.
+         * <pre><a href="https://URL/apache-cassandra-4.0.1-bin.tar.gz">...</a></pre>
+         * @param checksums URIs to download checksums. If empty checksum verifying is skipped.
+         * <pre>SHA-512 : https://URL/apache-cassandra-4.0.1-bin.tar.gz.sha512</pre>
+         */
+        public CassandraPackage(String name, URI uri, Map<String, URI> checksums) {
+            Objects.requireNonNull(name, "Name must not be null");
+            Objects.requireNonNull(uri, "URI must not be null");
+            Objects.requireNonNull(checksums, "Checksums must not be null");
+            if (!StringUtils.hasText(name)) {
+                throw new IllegalArgumentException("Name must not be empty");
+            }
+            this.name = name;
+            this.uri = uri;
+            this.checksums = Collections.unmodifiableMap(checksums);
+        }
 
-	/**
-	 * Represents Cassandra package to download.
-	 */
-	protected static final class CassandraPackage {
+        /**
+         * Gets the URI to the package to download.
+         *
+         * @return the URI
+         */
+        public URI getUri() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-		private final String name;
+        /**
+         * Gets the package name.
+         *
+         * @return the name
+         */
+        public String getName() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-		private final URI uri;
-
-		private final Map<String, URI> checksums;
-
-		/**
-		 * Creates {@link CassandraPackage}.
-		 *
-		 * @param name the name of the package.
-		 * <pre>apache-cassandra-4.0.1-bin.tar.gz</pre>
-		 * @param uri the URI to the package to download.
-		 * <pre><a href="https://URL/apache-cassandra-4.0.1-bin.tar.gz">...</a></pre>
-		 * @param checksums URIs to download checksums. If empty checksum verifying is skipped.
-		 * <pre>SHA-512 : https://URL/apache-cassandra-4.0.1-bin.tar.gz.sha512</pre>
-		 */
-		public CassandraPackage(String name, URI uri, Map<String, URI> checksums) {
-			Objects.requireNonNull(name, "Name must not be null");
-			Objects.requireNonNull(uri, "URI must not be null");
-			Objects.requireNonNull(checksums, "Checksums must not be null");
-			if (!StringUtils.hasText(name)) {
-				throw new IllegalArgumentException("Name must not be empty");
-			}
-			this.name = name;
-			this.uri = uri;
-			this.checksums = Collections.unmodifiableMap(checksums);
-		}
-
-		/**
-		 * Gets the URI to the package to download.
-		 *
-		 * @return the URI
-		 */
-		public URI getUri() {
-			return this.uri;
-		}
-
-		/**
-		 * Gets the package name.
-		 *
-		 * @return the name
-		 */
-		public String getName() {
-			return this.name;
-		}
-
-		/**
-		 * Gets URIs to download checksums.
-		 *
-		 * @return the URIS
-		 */
-		public Map<String, URI> getChecksums() {
-			return this.checksums;
-		}
-
-	}
-
+        /**
+         * Gets URIs to download checksums.
+         *
+         * @return the URIS
+         */
+        public Map<String, URI> getChecksums() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
 }

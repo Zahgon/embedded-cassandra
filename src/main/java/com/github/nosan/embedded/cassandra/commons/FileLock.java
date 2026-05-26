@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons;
 
 import java.io.IOException;
@@ -56,97 +55,67 @@ import java.util.concurrent.TimeUnit;
  */
 public final class FileLock implements AutoCloseable {
 
-	private final FileChannel fileChannel;
+    private final FileChannel fileChannel;
 
-	private final Map<Thread, java.nio.channels.FileLock> locks = new ConcurrentHashMap<>();
+    private final Map<Thread, java.nio.channels.FileLock> locks = new ConcurrentHashMap<>();
 
-	private FileLock(FileChannel fileChannel) {
-		this.fileChannel = fileChannel;
-	}
+    private FileLock(FileChannel fileChannel) {
+        this.fileChannel = fileChannel;
+    }
 
-	/**
-	 * Creates a {@link FileLock} instance for the specified file.
-	 *
-	 * <p>The specified file will be opened in write mode with the {@link StandardOpenOption#CREATE}
-	 * option to ensure that the file will be created if it does not already exist.</p>
-	 *
-	 * @param file the path to the file to lock
-	 * @return a new {@link FileLock} instance
-	 * @throws IOException if an I/O error occurs while opening the file
-	 * @throws NullPointerException if the {@code file} is {@code null}
-	 */
-	public static FileLock of(Path file) throws IOException {
-		Objects.requireNonNull(file, "File must not be null");
-		return new FileLock(FileChannel.open(file, StandardOpenOption.WRITE, StandardOpenOption.CREATE));
-	}
+    /**
+     * Creates a {@link FileLock} instance for the specified file.
+     *
+     * <p>The specified file will be opened in write mode with the {@link StandardOpenOption#CREATE}
+     * option to ensure that the file will be created if it does not already exist.</p>
+     *
+     * @param file the path to the file to lock
+     * @return a new {@link FileLock} instance
+     * @throws IOException if an I/O error occurs while opening the file
+     * @throws NullPointerException if the {@code file} is {@code null}
+     */
+    public static FileLock of(Path file) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Attempts to acquire an exclusive lock on the file.
-	 *
-	 * <p>This method tries to acquire a lock on the file within the given timeout period.
-	 * If the lock is successfully acquired during this time, the method returns {@code true}. Otherwise, it returns
-	 * {@code false} after the timeout period has elapsed.</p>
-	 *
-	 * @param timeout the maximum amount of time to wait for the lock
-	 * @param timeUnit the unit of time for the {@code timeout} parameter
-	 * @return {@code true} if the lock was successfully acquired, otherwise {@code false}
-	 * @throws IllegalArgumentException if the {@code timeout} is negative
-	 * @throws FileLockInterruptionException if the thread is interrupted while waiting for the lock
-	 * @throws IOException if an I/O error occurs while trying to acquire the lock
-	 * @throws NullPointerException if {@code timeUnit} is {@code null}
-	 */
-	public synchronized boolean tryLock(long timeout, TimeUnit timeUnit)
-			throws FileLockInterruptionException, IOException {
-		Objects.requireNonNull(timeUnit, "TimeUnit must not be null");
-		if (timeout < 0) {
-			throw new IllegalArgumentException("Timeout must not be negative");
-		}
-		java.nio.channels.FileLock fileLock = this.locks.get(Thread.currentThread());
-		if (fileLock != null && fileLock.isValid()) {
-			return true;
-		}
-		long startTime = System.nanoTime();
-		long rem = timeUnit.toNanos(timeout);
-		do {
-			fileLock = lock(this.fileChannel);
-			if (fileLock != null) {
-				this.locks.put(Thread.currentThread(), fileLock);
-				return true;
-			}
-			if (rem > 0) {
-				try {
-					Thread.sleep(Math.min(TimeUnit.NANOSECONDS.toMillis(rem) + 1, 100));
-				}
-				catch (InterruptedException ex) {
-					throw new FileLockInterruptionException();
-				}
-			}
-			rem = timeUnit.toNanos(timeout) - (System.nanoTime() - startTime);
-		} while (rem > 0);
-		return false;
-	}
+    /**
+     * Attempts to acquire an exclusive lock on the file.
+     *
+     * <p>This method tries to acquire a lock on the file within the given timeout period.
+     * If the lock is successfully acquired during this time, the method returns {@code true}. Otherwise, it returns
+     * {@code false} after the timeout period has elapsed.</p>
+     *
+     * @param timeout the maximum amount of time to wait for the lock
+     * @param timeUnit the unit of time for the {@code timeout} parameter
+     * @return {@code true} if the lock was successfully acquired, otherwise {@code false}
+     * @throws IllegalArgumentException if the {@code timeout} is negative
+     * @throws FileLockInterruptionException if the thread is interrupted while waiting for the lock
+     * @throws IOException if an I/O error occurs while trying to acquire the lock
+     * @throws NullPointerException if {@code timeUnit} is {@code null}
+     */
+    public synchronized boolean tryLock(long timeout, TimeUnit timeUnit) throws FileLockInterruptionException, IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Releases all locks and closes the underlying {@link FileChannel}.
-	 *
-	 * <p>After this method is called, the file associated with this {@link FileLock} will
-	 * no longer be locked, and its {@link FileChannel} will be closed.</p>
-	 *
-	 * @throws IOException if an I/O error occurs while closing the {@link FileChannel}
-	 */
-	@Override
-	public synchronized void close() throws IOException {
-		this.fileChannel.close();
-		this.locks.clear();
-	}
+    /**
+     * Releases all locks and closes the underlying {@link FileChannel}.
+     *
+     * <p>After this method is called, the file associated with this {@link FileLock} will
+     * no longer be locked, and its {@link FileChannel} will be closed.</p>
+     *
+     * @throws IOException if an I/O error occurs while closing the {@link FileChannel}
+     */
+    @Override
+    public synchronized void close() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private static java.nio.channels.FileLock lock(FileChannel fileChannel) throws IOException {
-		try {
-			return fileChannel.tryLock();
-		}
-		catch (OverlappingFileLockException ex) {
-			return null; // Another thread or process already owns the lock
-		}
-	}
-
+    private static java.nio.channels.FileLock lock(FileChannel fileChannel) throws IOException {
+        try {
+            return fileChannel.tryLock();
+        } catch (OverlappingFileLockException ex) {
+            // Another thread or process already owns the lock
+            return null;
+        }
+    }
 }

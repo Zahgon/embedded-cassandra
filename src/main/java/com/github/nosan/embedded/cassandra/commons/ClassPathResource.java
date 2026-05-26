@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons;
 
 import java.io.FileNotFoundException;
@@ -34,127 +33,106 @@ import java.util.Optional;
  */
 public class ClassPathResource implements Resource {
 
-	private final String path;
+    private final String path;
 
-	private final ClassLoader classLoader;
+    private final ClassLoader classLoader;
 
-	/**
-	 * Constructs a new {@link ClassPathResource} with the specified resource name.
-	 *
-	 * @param path the resource name
-	 */
-	public ClassPathResource(String path) {
-		this(path, null);
-	}
+    /**
+     * Constructs a new {@link ClassPathResource} with the specified resource name.
+     *
+     * @param path the resource name
+     */
+    public ClassPathResource(String path) {
+        this(path, null);
+    }
 
-	/**
-	 * Constructs a new {@link ClassPathResource} with the specified resource name and class loader.
-	 *
-	 * @param path the resource path
-	 * @param classLoader class loader used to load a resource
-	 */
-	public ClassPathResource(String path, ClassLoader classLoader) {
-		Objects.requireNonNull(path, "Name must not be null");
-		if (!StringUtils.hasText(path)) {
-			throw new IllegalArgumentException("Name must not be empty");
-		}
-		this.path = clean(path);
-		this.classLoader = (classLoader != null) ? classLoader : getClass().getClassLoader();
-	}
+    /**
+     * Constructs a new {@link ClassPathResource} with the specified resource name and class loader.
+     *
+     * @param path the resource path
+     * @param classLoader class loader used to load a resource
+     */
+    public ClassPathResource(String path, ClassLoader classLoader) {
+        Objects.requireNonNull(path, "Name must not be null");
+        if (!StringUtils.hasText(path)) {
+            throw new IllegalArgumentException("Name must not be empty");
+        }
+        this.path = clean(path);
+        this.classLoader = (classLoader != null) ? classLoader : getClass().getClassLoader();
+    }
 
-	@Override
-	public Optional<String> getFileName() {
-		return Optional.of(getFilename()).filter(StringUtils::hasText);
-	}
+    @Override
+    public Optional<String> getFileName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean exists() {
-		return getURL() != null;
-	}
+    @Override
+    public boolean exists() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isWritable() {
-		return false;
-	}
+    @Override
+    public boolean isWritable() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isReadable() {
-		try {
-			getInputStream().close();
-			return true;
-		}
-		catch (IOException ex) {
-			return false;
-		}
-	}
+    @Override
+    public boolean isReadable() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public InputStream getInputStream() throws IOException {
-		URLConnection connection = toURL().openConnection();
-		connection.setDoInput(true);
-		return connection.getInputStream();
-	}
+    @Override
+    public InputStream getInputStream() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public OutputStream getOutputStream() throws IOException {
-		throw new UnknownServiceException("protocol doesn't support output");
-	}
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public URL toURL() throws FileNotFoundException {
-		URL url = getURL();
-		if (url == null) {
-			throw new FileNotFoundException(
-					String.format("Classpath resource with a name '%s' does not exist", this.path));
-		}
-		return url;
-	}
+    @Override
+    public URL toURL() throws FileNotFoundException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (other == null || getClass() != other.getClass()) {
-			return false;
-		}
-		ClassPathResource that = (ClassPathResource) other;
-		return this.path.equals(that.path) && Objects.equals(this.classLoader, that.classLoader);
-	}
+    @Override
+    public boolean equals(Object other) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.path, this.classLoader);
-	}
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public String toString() {
-		return "ClassPathResource{" + "name='" + this.path + '\'' + '}';
-	}
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Gets the path.
-	 *
-	 * @return the path
-	 */
-	public String getPath() {
-		return this.path;
-	}
+    /**
+     * Gets the path.
+     *
+     * @return the path
+     */
+    public String getPath() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private URL getURL() {
-		ClassLoader cl = this.classLoader;
-		return (cl != null) ? cl.getResource(this.path) : ClassLoader.getSystemResource(this.path);
-	}
+    private URL getURL() {
+        ClassLoader cl = this.classLoader;
+        return (cl != null) ? cl.getResource(this.path) : ClassLoader.getSystemResource(this.path);
+    }
 
-	private String getFilename() {
-		String name = this.path;
-		int index = name.lastIndexOf('/');
-		return (index != -1) ? name.substring(index + 1) : name;
-	}
+    private String getFilename() {
+        String name = this.path;
+        int index = name.lastIndexOf('/');
+        return (index != -1) ? name.substring(index + 1) : name;
+    }
 
-	private static String clean(String name) {
-		String path = name.trim().replace('\\', '/');
-		return path.startsWith("/") ? path.substring(1) : path;
-	}
-
+    private static String clean(String name) {
+        String path = name.trim().replace('\\', '/');
+        return path.startsWith("/") ? path.substring(1) : path;
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra;
 
 import java.io.Closeable;
@@ -29,27 +28,26 @@ import java.util.function.Consumer;
  */
 class ErrorCollector implements Consumer<String>, Closeable {
 
-	private final List<String> errors = new CopyOnWriteArrayList<>();
+    private final List<String> errors = new CopyOnWriteArrayList<>();
 
-	private final CassandraDatabase database;
+    private final CassandraDatabase database;
 
-	ErrorCollector(CassandraDatabase database) {
-		this.database = database;
-		database.getStdErr().attach(this);
-	}
+    ErrorCollector(CassandraDatabase database) {
+        this.database = database;
+        database.getStdErr().attach(this);
+    }
 
-	@Override
-	public void accept(String line) {
-		this.errors.add(line);
-	}
+    @Override
+    public void accept(String line) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void close() {
-		this.database.getStdErr().detach(this);
-	}
+    @Override
+    public void close() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	List<String> getErrors() {
-		return this.errors;
-	}
-
+    List<String> getErrors() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

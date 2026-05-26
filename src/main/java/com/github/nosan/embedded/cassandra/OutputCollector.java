@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra;
 
 import java.io.Closeable;
@@ -29,30 +28,26 @@ import java.util.function.Consumer;
  */
 class OutputCollector implements Consumer<String>, Closeable {
 
-	private final Deque<String> output = new ConcurrentLinkedDeque<>();
+    private final Deque<String> output = new ConcurrentLinkedDeque<>();
 
-	private final CassandraDatabase database;
+    private final CassandraDatabase database;
 
-	OutputCollector(CassandraDatabase database) {
-		this.database = database;
-		database.getStdOut().attach(this);
-	}
+    OutputCollector(CassandraDatabase database) {
+        this.database = database;
+        database.getStdOut().attach(this);
+    }
 
-	@Override
-	public void accept(String line) {
-		while (this.output.size() >= 30) {
-			this.output.removeFirst();
-		}
-		this.output.addLast(line);
-	}
+    @Override
+    public void accept(String line) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void close() {
-		this.database.getStdOut().detach(this);
-	}
+    @Override
+    public void close() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	Deque<String> getOutput() {
-		return this.output;
-	}
-
+    Deque<String> getOutput() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

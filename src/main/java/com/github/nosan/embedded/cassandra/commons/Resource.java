@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons;
 
 import java.io.IOException;
@@ -35,73 +34,65 @@ import java.util.Optional;
  */
 public interface Resource {
 
-	/**
-	 * Gets the file name of this resource.
-	 *
-	 * @return the name of this Resource.
-	 */
-	Optional<String> getFileName();
+    /**
+     * Gets the file name of this resource.
+     *
+     * @return the name of this Resource.
+     */
+    Optional<String> getFileName();
 
-	/**
-	 * Tests whether a resource exists.
-	 *
-	 * @return {@code true} if the resource exists
-	 */
-	boolean exists();
+    /**
+     * Tests whether a resource exists.
+     *
+     * @return {@code true} if the resource exists
+     */
+    boolean exists();
 
-	/**
-	 * Tests whether a resource is writable.
-	 *
-	 * @return {@code true} if the resource exists and is writable
-	 */
-	boolean isWritable();
+    /**
+     * Tests whether a resource is writable.
+     *
+     * @return {@code true} if the resource exists and is writable
+     */
+    boolean isWritable();
 
-	/**
-	 * Tests whether a resource is readable.
-	 *
-	 * @return {@code true} if the resource exists and is readable
-	 */
-	boolean isReadable();
+    /**
+     * Tests whether a resource is readable.
+     *
+     * @return {@code true} if the resource exists and is readable
+     */
+    boolean isReadable();
 
-	/**
-	 * Open an {@link InputStream} for the underlying resource.
-	 *
-	 * @return the input stream for the resource
-	 * @throws IOException if resource does not exist or an I/O error occurs
-	 */
-	InputStream getInputStream() throws IOException;
+    /**
+     * Open an {@link InputStream} for the underlying resource.
+     *
+     * @return the input stream for the resource
+     * @throws IOException if resource does not exist or an I/O error occurs
+     */
+    InputStream getInputStream() throws IOException;
 
-	/**
-	 * Open an {@link OutputStream} for the underlying resource.
-	 *
-	 * @return the output stream for the resource
-	 * @throws IOException if resource does not exist or an I/O error occurs
-	 */
-	OutputStream getOutputStream() throws IOException;
+    /**
+     * Open an {@link OutputStream} for the underlying resource.
+     *
+     * @return the output stream for the resource
+     * @throws IOException if resource does not exist or an I/O error occurs
+     */
+    OutputStream getOutputStream() throws IOException;
 
-	/**
-	 * Gets a {@link URL} to the underlying resource.
-	 *
-	 * @return the URL to the resource
-	 * @throws IOException if resource does not exist, or {@code URL} cannot be built
-	 */
-	URL toURL() throws IOException;
+    /**
+     * Gets a {@link URL} to the underlying resource.
+     *
+     * @return the URL to the resource
+     * @throws IOException if resource does not exist, or {@code URL} cannot be built
+     */
+    URL toURL() throws IOException;
 
-	/**
-	 * Gets a {@link URI} to the underlying resource.
-	 *
-	 * @return the URI to the resource
-	 * @throws IOException if resource does not exist, or {@code URI} cannot be built
-	 */
-	default URI toURI() throws IOException {
-		URL url = toURL();
-		try {
-			return url.toURI();
-		}
-		catch (URISyntaxException ex) {
-			throw new IOException("URL '" + url + "' is not formatted strictly according to RFC2396"
-					+ " and cannot be converted to a URI", ex);
-		}
-	}
-
+    /**
+     * Gets a {@link URI} to the underlying resource.
+     *
+     * @return the URI to the resource
+     * @throws IOException if resource does not exist, or {@code URI} cannot be built
+     */
+    default URI toURI() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

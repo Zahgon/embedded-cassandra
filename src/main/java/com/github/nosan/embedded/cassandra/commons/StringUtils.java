@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons;
 
 /**
@@ -24,26 +23,17 @@ package com.github.nosan.embedded.cassandra.commons;
  */
 public final class StringUtils {
 
-	private StringUtils() {
-	}
+    private StringUtils() {
+    }
 
-	/**
-	 * Check whether the provided {@code string} contains actual <em>text</em>.
-	 *
-	 * @param source the {@code string} to check (maybe {@code null})
-	 * @return {@code true} if the {@code string} is not {@code null}, its length is greater than 0, and it does not
-	 * contain whitespace only
-	 */
-	public static boolean hasText(CharSequence source) {
-		if (source == null) {
-			return false;
-		}
-		for (int i = 0; i < source.length(); i++) {
-			if (!Character.isWhitespace(source.charAt(i))) {
-				return true;
-			}
-		}
-		return false;
-	}
-
+    /**
+     * Check whether the provided {@code string} contains actual <em>text</em>.
+     *
+     * @param source the {@code string} to check (maybe {@code null})
+     * @return {@code true} if the {@code string} is not {@code null}, its length is greater than 0, and it does not
+     * contain whitespace only
+     */
+    public static boolean hasText(CharSequence source) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

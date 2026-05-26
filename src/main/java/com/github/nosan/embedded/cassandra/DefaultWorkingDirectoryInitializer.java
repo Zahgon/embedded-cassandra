@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra;
 
 import java.io.IOException;
@@ -25,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
-
 import com.github.nosan.embedded.cassandra.commons.FileUtils;
 
 /**
@@ -39,84 +37,74 @@ import com.github.nosan.embedded.cassandra.commons.FileUtils;
  */
 public class DefaultWorkingDirectoryInitializer implements WorkingDirectoryInitializer {
 
-	private static final Set<String> SKIP_DIRECTORIES = Collections.unmodifiableSet(
-			new LinkedHashSet<>(Arrays.asList("javadoc", "doc", "licenses")));
+    private static final Set<String> SKIP_DIRECTORIES = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList("javadoc", "doc", "licenses")));
 
-	private final CassandraDirectoryProvider cassandraDirectoryProvider;
+    private final CassandraDirectoryProvider cassandraDirectoryProvider;
 
-	private final CopyStrategy copyStrategy;
+    private final CopyStrategy copyStrategy;
 
-	/**
-	 * Creates a new {@link DefaultWorkingDirectoryInitializer} with the {@link CopyStrategy#REPLACE_EXISTING} copy
-	 * strategy.
-	 *
-	 * @param cassandraDirectoryProvider the Cassandra directory provider. This provider is used to retrieve the path to
-	 * the Cassandra directory.
-	 */
-	public DefaultWorkingDirectoryInitializer(CassandraDirectoryProvider cassandraDirectoryProvider) {
-		this(cassandraDirectoryProvider, DefaultWorkingDirectoryInitializer.CopyStrategy.REPLACE_EXISTING);
-	}
+    /**
+     * Creates a new {@link DefaultWorkingDirectoryInitializer} with the {@link CopyStrategy#REPLACE_EXISTING} copy
+     * strategy.
+     *
+     * @param cassandraDirectoryProvider the Cassandra directory provider. This provider is used to retrieve the path to
+     * the Cassandra directory.
+     */
+    public DefaultWorkingDirectoryInitializer(CassandraDirectoryProvider cassandraDirectoryProvider) {
+        this(cassandraDirectoryProvider, DefaultWorkingDirectoryInitializer.CopyStrategy.REPLACE_EXISTING);
+    }
 
-	/**
-	 * Creates a new {@link DefaultWorkingDirectoryInitializer}.
-	 *
-	 * @param cassandraDirectoryProvider the Cassandra directory provider. This provider is used to retrieve the path to
-	 * the Cassandra directory.
-	 * @param copyStrategy the strategy for copying Cassandra files.
-	 */
-	public DefaultWorkingDirectoryInitializer(CassandraDirectoryProvider cassandraDirectoryProvider,
-			CopyStrategy copyStrategy) {
-		Objects.requireNonNull(cassandraDirectoryProvider, "Cassandra Directory Provider must not be null");
-		Objects.requireNonNull(copyStrategy, "Copy Strategy must not be null");
-		this.cassandraDirectoryProvider = cassandraDirectoryProvider;
-		this.copyStrategy = copyStrategy;
-	}
+    /**
+     * Creates a new {@link DefaultWorkingDirectoryInitializer}.
+     *
+     * @param cassandraDirectoryProvider the Cassandra directory provider. This provider is used to retrieve the path to
+     * the Cassandra directory.
+     * @param copyStrategy the strategy for copying Cassandra files.
+     */
+    public DefaultWorkingDirectoryInitializer(CassandraDirectoryProvider cassandraDirectoryProvider, CopyStrategy copyStrategy) {
+        Objects.requireNonNull(cassandraDirectoryProvider, "Cassandra Directory Provider must not be null");
+        Objects.requireNonNull(copyStrategy, "Copy Strategy must not be null");
+        this.cassandraDirectoryProvider = cassandraDirectoryProvider;
+        this.copyStrategy = copyStrategy;
+    }
 
-	@Override
-	public final void init(Path workingDirectory, Version version) throws IOException {
-		Objects.requireNonNull(workingDirectory, "Working Directory must not be null");
-		Objects.requireNonNull(version, "Version must not be null");
-		Path cassandraDirectory = this.cassandraDirectoryProvider.getDirectory(version);
-		Objects.requireNonNull(cassandraDirectory, "Cassandra Directory must not be null");
-		this.copyStrategy.copy(cassandraDirectory, workingDirectory);
-	}
+    @Override
+    public final void init(Path workingDirectory, Version version) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Cassandra file copy strategies.
-	 */
-	public interface CopyStrategy {
+    /**
+     * Cassandra file copy strategies.
+     */
+    public interface CopyStrategy {
 
-		/**
-		 * Replaces a destination file if it exists.
-		 */
-		CopyStrategy REPLACE_EXISTING = (cassandraDirectory, workingDirectory) -> FileUtils.copy(cassandraDirectory,
-				workingDirectory, (path, attributes) -> {
-					if (attributes.isDirectory()) {
-						return !SKIP_DIRECTORIES.contains(path.getFileName().toString());
-					}
-					return true;
-				}, StandardCopyOption.REPLACE_EXISTING);
+        /**
+         * Replaces a destination file if it exists.
+         */
+        CopyStrategy REPLACE_EXISTING = (cassandraDirectory, workingDirectory) -> FileUtils.copy(cassandraDirectory, workingDirectory, (path, attributes) -> {
+            if (attributes.isDirectory()) {
+                return !SKIP_DIRECTORIES.contains(path.getFileName().toString());
+            }
+            return true;
+        }, StandardCopyOption.REPLACE_EXISTING);
 
-		/**
-		 * Skips copying if a destination file already exists.
-		 */
-		CopyStrategy SKIP_EXISTING = (cassandraDirectory, workingDirectory) -> FileUtils.copy(cassandraDirectory,
-				workingDirectory, (path, attributes) -> {
-					if (attributes.isDirectory()) {
-						return !SKIP_DIRECTORIES.contains(path.getFileName().toString());
-					}
-					return !Files.exists(workingDirectory.resolve(cassandraDirectory.relativize(path)));
-				});
+        /**
+         * Skips copying if a destination file already exists.
+         */
+        CopyStrategy SKIP_EXISTING = (cassandraDirectory, workingDirectory) -> FileUtils.copy(cassandraDirectory, workingDirectory, (path, attributes) -> {
+            if (attributes.isDirectory()) {
+                return !SKIP_DIRECTORIES.contains(path.getFileName().toString());
+            }
+            return !Files.exists(workingDirectory.resolve(cassandraDirectory.relativize(path)));
+        });
 
-		/**
-		 * Copies Cassandra files into the working directory.
-		 *
-		 * @param cassandraDirectory the Cassandra directory
-		 * @param workingDirectory the Cassandra working directory
-		 * @throws IOException if an I/O error occurs
-		 */
-		void copy(Path cassandraDirectory, Path workingDirectory) throws IOException;
-
-	}
-
+        /**
+         * Copies Cassandra files into the working directory.
+         *
+         * @param cassandraDirectory the Cassandra directory
+         * @param workingDirectory the Cassandra working directory
+         * @throws IOException if an I/O error occurs
+         */
+        void copy(Path cassandraDirectory, Path workingDirectory) throws IOException;
+    }
 }

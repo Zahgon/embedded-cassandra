@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons;
 
 import java.io.ByteArrayOutputStream;
@@ -32,75 +31,54 @@ import java.util.Objects;
  */
 public final class StreamUtils {
 
-	private static final int BUFFER_SIZE = 8192;
+    private static final int BUFFER_SIZE = 8192;
 
-	private StreamUtils() {
-	}
+    private StreamUtils() {
+    }
 
-	/**
-	 * Converts the contents of an {@link InputStream} to a {@link String} using the specified {@link Charset}.
-	 *
-	 * <p><b>Note:</b> The provided {@link InputStream} will <strong>not</strong> be closed by this method. It is the
-	 * caller's responsibility to close the stream once processing is complete.</p>
-	 *
-	 * @param inputStream the {@link InputStream} to read from
-	 * @param charset the character encoding to use
-	 * @return the decoded {@link String} representation of the {@link InputStream}'s contents
-	 * @throws IOException if an I/O error occurs while reading the {@link InputStream}
-	 * @throws NullPointerException if {@code inputStream} or {@code charset} is {@code null}
-	 */
-	public static String toString(InputStream inputStream, Charset charset) throws IOException {
-		Objects.requireNonNull(inputStream, "InputStream must not be null");
-		Objects.requireNonNull(charset, "Charset must not be null");
-		StringBuilder out = new StringBuilder();
-		try (InputStreamReader reader = new InputStreamReader(inputStream, charset)) {
-			char[] buffer = new char[BUFFER_SIZE];
-			int read;
-			while ((read = reader.read(buffer)) != -1) {
-				out.append(buffer, 0, read);
-			}
-		}
-		return out.toString();
-	}
+    /**
+     * Converts the contents of an {@link InputStream} to a {@link String} using the specified {@link Charset}.
+     *
+     * <p><b>Note:</b> The provided {@link InputStream} will <strong>not</strong> be closed by this method. It is the
+     * caller's responsibility to close the stream once processing is complete.</p>
+     *
+     * @param inputStream the {@link InputStream} to read from
+     * @param charset the character encoding to use
+     * @return the decoded {@link String} representation of the {@link InputStream}'s contents
+     * @throws IOException if an I/O error occurs while reading the {@link InputStream}
+     * @throws NullPointerException if {@code inputStream} or {@code charset} is {@code null}
+     */
+    public static String toString(InputStream inputStream, Charset charset) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Reads the entire contents of an {@link InputStream} into a byte array.
-	 *
-	 * <p><b>Note:</b> The provided {@link InputStream} will <strong>not</strong> be closed by this method. It is the
-	 * caller's responsibility to close the stream once processing is complete.</p>
-	 *
-	 * @param inputStream the {@link InputStream} to read from
-	 * @return a byte array containing the data read from the {@link InputStream}
-	 * @throws IOException if an I/O error occurs while reading the {@link InputStream}
-	 * @throws NullPointerException if {@code inputStream} is {@code null}
-	 */
-	public static byte[] toByteArray(InputStream inputStream) throws IOException {
-		Objects.requireNonNull(inputStream, "InputStream must not be null");
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		copy(inputStream, out);
-		return out.toByteArray();
-	}
+    /**
+     * Reads the entire contents of an {@link InputStream} into a byte array.
+     *
+     * <p><b>Note:</b> The provided {@link InputStream} will <strong>not</strong> be closed by this method. It is the
+     * caller's responsibility to close the stream once processing is complete.</p>
+     *
+     * @param inputStream the {@link InputStream} to read from
+     * @return a byte array containing the data read from the {@link InputStream}
+     * @throws IOException if an I/O error occurs while reading the {@link InputStream}
+     * @throws NullPointerException if {@code inputStream} is {@code null}
+     */
+    public static byte[] toByteArray(InputStream inputStream) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Copies the contents of an {@link InputStream} to an {@link OutputStream}.
-	 *
-	 * <p><b>Note:</b> Neither the {@link InputStream} nor the {@link OutputStream} will be closed by this method. It
-	 * is the caller's responsibility to close the streams once processing is complete.</p>
-	 *
-	 * @param inputStream the {@link InputStream} to read from
-	 * @param outputStream the {@link OutputStream} to write to
-	 * @throws IOException if an I/O error occurs while reading or writing
-	 * @throws NullPointerException if {@code inputStream} or {@code outputStream} is {@code null}
-	 */
-	public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-		Objects.requireNonNull(inputStream, "InputStream must not be null");
-		Objects.requireNonNull(outputStream, "OutputStream must not be null");
-		byte[] buffer = new byte[BUFFER_SIZE];
-		int read;
-		while ((read = inputStream.read(buffer)) != -1) {
-			outputStream.write(buffer, 0, read);
-		}
-		outputStream.flush();
-	}
-
+    /**
+     * Copies the contents of an {@link InputStream} to an {@link OutputStream}.
+     *
+     * <p><b>Note:</b> Neither the {@link InputStream} nor the {@link OutputStream} will be closed by this method. It
+     * is the caller's responsibility to close the streams once processing is complete.</p>
+     *
+     * @param inputStream the {@link InputStream} to read from
+     * @param outputStream the {@link OutputStream} to write to
+     * @throws IOException if an I/O error occurs while reading or writing
+     * @throws NullPointerException if {@code inputStream} or {@code outputStream} is {@code null}
+     */
+    public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

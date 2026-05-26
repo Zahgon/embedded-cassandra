@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.cql;
 
 import java.util.List;
@@ -28,50 +27,40 @@ import java.util.StringJoiner;
  */
 public class StatementsCqlScript implements CqlScript {
 
-	private final List<String> statements;
+    private final List<String> statements;
 
-	/**
-	 * Constructs a {@link StatementsCqlScript} with the specified list of CQL statements.
-	 *
-	 * @param statements the list of CQL statements (must not be {@code null})
-	 * @throws NullPointerException if {@code statements} is {@code null}
-	 */
-	public StatementsCqlScript(List<? extends String> statements) {
-		this.statements = List.copyOf(statements);
-	}
+    /**
+     * Constructs a {@link StatementsCqlScript} with the specified list of CQL statements.
+     *
+     * @param statements the list of CQL statements (must not be {@code null})
+     * @throws NullPointerException if {@code statements} is {@code null}
+     */
+    public StatementsCqlScript(List<? extends String> statements) {
+        this.statements = List.copyOf(statements);
+    }
 
-	/**
-	 * Retrieves the list of CQL statements.
-	 *
-	 * @return the list of CQL statements (never {@code null})
-	 */
-	@Override
-	public List<String> getStatements() {
-		return this.statements;
-	}
+    /**
+     * Retrieves the list of CQL statements.
+     *
+     * @return the list of CQL statements (never {@code null})
+     */
+    @Override
+    public List<String> getStatements() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		StatementsCqlScript that = (StatementsCqlScript) o;
-		return Objects.equals(this.statements, that.statements);
-	}
+    @Override
+    public boolean equals(Object o) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.statements);
-	}
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public String toString() {
-		return new StringJoiner(", ", StatementsCqlScript.class.getSimpleName() + "[", "]")
-				.add("statements=" + this.statements)
-				.toString();
-	}
-
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

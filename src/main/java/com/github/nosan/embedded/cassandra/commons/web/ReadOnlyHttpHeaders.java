@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons.web;
 
 import java.util.AbstractMap;
@@ -33,83 +32,76 @@ import java.util.stream.Collectors;
  */
 final class ReadOnlyHttpHeaders extends HttpHeaders {
 
-	ReadOnlyHttpHeaders(HttpHeaders httpHeaders) {
-		super(httpHeaders.headers);
-	}
+    ReadOnlyHttpHeaders(HttpHeaders httpHeaders) {
+        super(httpHeaders.headers);
+    }
 
-	@Override
-	public void add(String name, String value) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void add(String name, String value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void set(String name, String value) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void set(String name, String value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Optional<String> getFirst(String name) {
-		return super.getFirst(name);
-	}
+    @Override
+    public Optional<String> getFirst(String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean containsKey(Object name) {
-		return super.containsKey(name);
-	}
+    @Override
+    public boolean containsKey(Object name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean containsValue(Object value) {
-		return super.containsValue(value);
-	}
+    @Override
+    public boolean containsValue(Object value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public List<String> put(String key, List<String> values) {
-		throw new UnsupportedOperationException();
+    @Override
+    public List<String> put(String key, List<String> values) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	}
+    @Override
+    public List<String> remove(Object key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public List<String> remove(Object key) {
-		throw new UnsupportedOperationException();
+    @Override
+    public void putAll(Map<? extends String, ? extends List<String>> headers) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	}
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void putAll(Map<? extends String, ? extends List<String>> headers) {
-		throw new UnsupportedOperationException();
+    @Override
+    public List<String> get(Object key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	}
+    @Override
+    public Set<String> keySet() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void clear() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public Collection<List<String>> values() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public List<String> get(Object key) {
-		return toUnmodifiable(super.get(key), Collections::unmodifiableList);
-	}
+    @Override
+    public Set<Entry<String, List<String>>> entrySet() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Set<String> keySet() {
-		return toUnmodifiable(super.keySet(), Collections::unmodifiableSet);
-	}
-
-	@Override
-	public Collection<List<String>> values() {
-		return toUnmodifiable(super.values(), Collections::unmodifiableCollection);
-	}
-
-	@Override
-	public Set<Entry<String, List<String>>> entrySet() {
-		return Collections.unmodifiableSet(super.entrySet().stream()
-				.map(entry -> new AbstractMap.SimpleImmutableEntry<>(entry.getKey(),
-						toUnmodifiable(entry.getValue(), Collections::unmodifiableList)))
-				.collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet)));
-	}
-
-	private static <C, IC extends C> C toUnmodifiable(C collection, Function<C, IC> constructor) {
-		return (collection != null) ? constructor.apply(collection) : null;
-	}
-
+    private static <C, IC extends C> C toUnmodifiable(C collection, Function<C, IC> constructor) {
+        return (collection != null) ? constructor.apply(collection) : null;
+    }
 }

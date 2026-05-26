@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons.web;
 
 import java.net.URI;
@@ -37,94 +36,93 @@ import java.util.Objects;
  */
 public class HttpRequest {
 
-	private final URI uri;
+    private final URI uri;
 
-	private final String method;
+    private final String method;
 
-	private final HttpHeaders headers;
+    private final HttpHeaders headers;
 
-	/**
-	 * Creates a new {@link HttpRequest} with the specified URI and the default HTTP {@code GET} method.
-	 *
-	 * @param uri the URI of the request
-	 * @throws NullPointerException if {@code uri} is {@code null}
-	 */
-	public HttpRequest(URI uri) {
-		this(uri, "GET", new HttpHeaders());
-	}
+    /**
+     * Creates a new {@link HttpRequest} with the specified URI and the default HTTP {@code GET} method.
+     *
+     * @param uri the URI of the request
+     * @throws NullPointerException if {@code uri} is {@code null}
+     */
+    public HttpRequest(URI uri) {
+        this(uri, "GET", new HttpHeaders());
+    }
 
-	/**
-	 * Creates a new {@link HttpRequest} with the specified URI and HTTP method.
-	 *
-	 * @param uri the URI of the request
-	 * @param method the HTTP method of the request (e.g., {@code GET}, {@code POST})
-	 * @throws NullPointerException if {@code uri} or {@code method} is {@code null}
-	 */
-	public HttpRequest(URI uri, String method) {
-		this(uri, method, new HttpHeaders());
-	}
+    /**
+     * Creates a new {@link HttpRequest} with the specified URI and HTTP method.
+     *
+     * @param uri the URI of the request
+     * @param method the HTTP method of the request (e.g., {@code GET}, {@code POST})
+     * @throws NullPointerException if {@code uri} or {@code method} is {@code null}
+     */
+    public HttpRequest(URI uri, String method) {
+        this(uri, method, new HttpHeaders());
+    }
 
-	/**
-	 * Creates a new {@link HttpRequest} with the specified URI, HTTP method, and headers.
-	 *
-	 * @param uri the URI of the request
-	 * @param method the HTTP method of the request (e.g., {@code GET}, {@code POST})
-	 * @param headers the HTTP headers of the request
-	 * @throws NullPointerException if {@code uri}, {@code method}, or {@code headers} is {@code null}
-	 */
-	public HttpRequest(URI uri, String method, HttpHeaders headers) {
-		Objects.requireNonNull(uri, "URI must not be null");
-		Objects.requireNonNull(method, "HTTP Method must not be null");
-		Objects.requireNonNull(headers, "HTTP Headers must not be null");
-		this.uri = uri;
-		this.method = method.toUpperCase(Locale.ENGLISH);
-		this.headers = headers;
-	}
+    /**
+     * Creates a new {@link HttpRequest} with the specified URI, HTTP method, and headers.
+     *
+     * @param uri the URI of the request
+     * @param method the HTTP method of the request (e.g., {@code GET}, {@code POST})
+     * @param headers the HTTP headers of the request
+     * @throws NullPointerException if {@code uri}, {@code method}, or {@code headers} is {@code null}
+     */
+    public HttpRequest(URI uri, String method, HttpHeaders headers) {
+        Objects.requireNonNull(uri, "URI must not be null");
+        Objects.requireNonNull(method, "HTTP Method must not be null");
+        Objects.requireNonNull(headers, "HTTP Headers must not be null");
+        this.uri = uri;
+        this.method = method.toUpperCase(Locale.ENGLISH);
+        this.headers = headers;
+    }
 
-	/**
-	 * Returns the URI of the request.
-	 *
-	 * @return the URI of the request
-	 */
-	public URI getUri() {
-		return this.uri;
-	}
+    /**
+     * Returns the URI of the request.
+     *
+     * @return the URI of the request
+     */
+    public URI getUri() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns the HTTP method of the request.
-	 *
-	 * <p>The method is always returned in uppercase to ensure compatibility
-	 * with standard HTTP conventions.</p>
-	 *
-	 * @return the HTTP method of the request
-	 */
-	public String getMethod() {
-		return this.method;
-	}
+    /**
+     * Returns the HTTP method of the request.
+     *
+     * <p>The method is always returned in uppercase to ensure compatibility
+     * with standard HTTP conventions.</p>
+     *
+     * @return the HTTP method of the request
+     */
+    public String getMethod() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns the HTTP headers associated with this request.
-	 *
-	 * <p>The headers are represented as a {@link HttpHeaders} object, allowing
-	 * for easy access and modification of individual headers.</p>
-	 *
-	 * @return the HTTP headers of the request
-	 */
-	public HttpHeaders getHeaders() {
-		return this.headers;
-	}
+    /**
+     * Returns the HTTP headers associated with this request.
+     *
+     * <p>The headers are represented as a {@link HttpHeaders} object, allowing
+     * for easy access and modification of individual headers.</p>
+     *
+     * @return the HTTP headers of the request
+     */
+    public HttpHeaders getHeaders() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns a string representation of the HTTP request.
-	 *
-	 * <p>The string representation includes the URI and HTTP method of the
-	 * request. Headers are not included in this output.</p>
-	 *
-	 * @return a string representation of the HTTP request
-	 */
-	@Override
-	public String toString() {
-		return "HttpRequest{" + "uri=" + this.uri + ", method='" + this.method + '\'' + '}';
-	}
-
+    /**
+     * Returns a string representation of the HTTP request.
+     *
+     * <p>The string representation includes the URI and HTTP method of the
+     * request. Headers are not included in this output.</p>
+     *
+     * @return a string representation of the HTTP request
+     */
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

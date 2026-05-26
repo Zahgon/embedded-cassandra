@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.cql;
 
 import java.util.Collections;
 import java.util.List;
-
 import com.github.nosan.embedded.cassandra.commons.StringUtils;
 
 /**
@@ -36,32 +34,26 @@ import com.github.nosan.embedded.cassandra.commons.StringUtils;
  */
 public abstract class AbstractCqlScript implements CqlScript {
 
-	/**
-	 * Creates a new instance of {@link AbstractCqlScript}.
-	 */
-	protected AbstractCqlScript() {
-	}
+    /**
+     * Creates a new instance of {@link AbstractCqlScript}.
+     */
+    protected AbstractCqlScript() {
+    }
 
-	/**
-	 * Retrieves the list of statements parsed from the CQL script.
-	 *
-	 * @return the list of parsed CQL statements, or an empty list if the script is null, empty, or whitespace-only
-	 */
-	@Override
-	public final List<String> getStatements() {
-		String script = getScript();
-		if (!StringUtils.hasText(script)) {
-			return Collections.emptyList();
-		}
-		List<String> statements = new Parser(script).getStatements();
-		return Collections.unmodifiableList(statements);
-	}
+    /**
+     * Retrieves the list of statements parsed from the CQL script.
+     *
+     * @return the list of parsed CQL statements, or an empty list if the script is null, empty, or whitespace-only
+     */
+    @Override
+    public final List<String> getStatements() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Retrieves the CQL script that will be parsed into statements.
-	 *
-	 * @return the CQL script to parse, or {@code null} if no script is defined
-	 */
-	protected abstract String getScript();
-
+    /**
+     * Retrieves the CQL script that will be parsed into statements.
+     *
+     * @return the CQL script to parse, or {@code null} if no script is defined
+     */
+    protected abstract String getScript();
 }

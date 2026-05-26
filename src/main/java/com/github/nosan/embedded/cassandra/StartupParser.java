@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra;
 
 import java.io.Closeable;
@@ -28,31 +27,28 @@ import java.util.regex.Pattern;
  */
 class StartupParser implements Consumer<String>, Closeable {
 
-	private static final Pattern STARTUP_COMPLETE = Pattern.compile("Startup complete$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern STARTUP_COMPLETE = Pattern.compile("Startup complete$", Pattern.CASE_INSENSITIVE);
 
-	private final CassandraDatabase database;
+    private final CassandraDatabase database;
 
-	private volatile boolean complete;
+    private volatile boolean complete;
 
-	StartupParser(CassandraDatabase database) {
-		this.database = database;
-		database.getStdOut().attach(this);
-	}
+    StartupParser(CassandraDatabase database) {
+        this.database = database;
+        database.getStdOut().attach(this);
+    }
 
-	@Override
-	public void accept(String line) {
-		if (STARTUP_COMPLETE.matcher(line).find()) {
-			this.complete = true;
-		}
-	}
+    @Override
+    public void accept(String line) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void close() {
-		this.database.getStdOut().detach(this);
-	}
+    @Override
+    public void close() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	boolean isComplete() {
-		return this.complete;
-	}
-
+    boolean isComplete() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

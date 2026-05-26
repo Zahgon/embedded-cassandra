@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra.commons;
 
 import java.io.File;
@@ -36,97 +35,89 @@ import java.util.Optional;
  */
 public class FileSystemResource implements Resource {
 
-	private final Path file;
+    private final Path file;
 
-	/**
-	 * Constructs a new {@link FileSystemResource} with the specified {@link Path}.
-	 *
-	 * @param file the {@link Path}
-	 */
-	public FileSystemResource(Path file) {
-		Objects.requireNonNull(file, "Path must not be null");
-		this.file = file;
-	}
+    /**
+     * Constructs a new {@link FileSystemResource} with the specified {@link Path}.
+     *
+     * @param file the {@link Path}
+     */
+    public FileSystemResource(Path file) {
+        Objects.requireNonNull(file, "Path must not be null");
+        this.file = file;
+    }
 
-	/**
-	 * Constructs a new {@link FileSystemResource} with the specified {@link File}.
-	 *
-	 * @param file the {@link File}
-	 */
-	public FileSystemResource(File file) {
-		Objects.requireNonNull(file, "File must not be null");
-		this.file = file.toPath();
-	}
+    /**
+     * Constructs a new {@link FileSystemResource} with the specified {@link File}.
+     *
+     * @param file the {@link File}
+     */
+    public FileSystemResource(File file) {
+        Objects.requireNonNull(file, "File must not be null");
+        this.file = file.toPath();
+    }
 
-	@Override
-	public InputStream getInputStream() throws IOException {
-		return Files.newInputStream(this.file);
-	}
+    @Override
+    public InputStream getInputStream() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public OutputStream getOutputStream() throws IOException {
-		return Files.newOutputStream(this.file);
-	}
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public URL toURL() throws MalformedURLException {
-		return this.file.toUri().toURL();
-	}
+    @Override
+    public URL toURL() throws MalformedURLException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public URI toURI() {
-		return this.file.toUri();
-	}
+    @Override
+    public URI toURI() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Optional<String> getFileName() {
-		return Optional.ofNullable(this.file.getFileName()).map(Object::toString).filter(StringUtils::hasText);
-	}
+    @Override
+    public Optional<String> getFileName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean exists() {
-		return Files.exists(this.file);
-	}
+    @Override
+    public boolean exists() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isWritable() {
-		return Files.isWritable(this.file) && !Files.isDirectory(this.file);
-	}
+    @Override
+    public boolean isWritable() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isReadable() {
-		return Files.isReadable(this.file) && !Files.isDirectory(this.file);
-	}
+    @Override
+    public boolean isReadable() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (other == null || getClass() != other.getClass()) {
-			return false;
-		}
-		FileSystemResource that = (FileSystemResource) other;
-		return this.file.equals(that.file);
-	}
+    @Override
+    public boolean equals(Object other) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Gets the file.
-	 *
-	 * @return the file
-	 */
-	public Path getFile() {
-		return this.file;
-	}
+    /**
+     * Gets the file.
+     *
+     * @return the file
+     */
+    public Path getFile() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int hashCode() {
-		return this.file.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public String toString() {
-		return "FileSystemResource{" + "file=" + this.file + '}';
-	}
-
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

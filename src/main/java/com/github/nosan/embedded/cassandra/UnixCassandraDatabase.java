@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.nosan.embedded.cassandra;
 
 import java.io.FileNotFoundException;
@@ -27,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,87 +37,49 @@ import org.slf4j.LoggerFactory;
  */
 class UnixCassandraDatabase extends AbstractCassandraDatabase {
 
-	private static final Logger log = LoggerFactory.getLogger(UnixCassandraDatabase.class);
+    private static final Logger log = LoggerFactory.getLogger(UnixCassandraDatabase.class);
 
-	UnixCassandraDatabase(String name, Version version, Path configurationFile, Path workingDirectory,
-			Map<String, String> environmentVariables, Map<String, Object> configProperties,
-			Map<String, String> systemProperties, Set<String> jvmOptions) {
-		super(name, version, configurationFile, workingDirectory, environmentVariables, configProperties,
-				systemProperties, jvmOptions);
-	}
+    UnixCassandraDatabase(String name, Version version, Path configurationFile, Path workingDirectory, Map<String, String> environmentVariables, Map<String, Object> configProperties, Map<String, String> systemProperties, Set<String> jvmOptions) {
+        super(name, version, configurationFile, workingDirectory, environmentVariables, configProperties, systemProperties, jvmOptions);
+    }
 
-	@Override
-	protected ProcessWrapper doStart() throws IOException {
-		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.directory(getWorkingDirectory().toFile());
-		processBuilder.environment().putAll(getEnvironmentVariables());
-		Path executable = getWorkingDirectory().resolve("bin/cassandra");
-		if (!Files.exists(executable)) {
-			throw new FileNotFoundException(String.format("%s does not exist", executable));
-		}
-		setExecutable(executable);
-		List<String> command = new ArrayList<>();
-		command.add(executable.toString());
-		if (getVersion().compareTo(Version.parse("3.1")) > 0) {
-			command.add("-R");
-		}
-		command.add("-f");
-		return start(getName(), processBuilder.command(command));
-	}
+    @Override
+    protected ProcessWrapper doStart() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected void doStop(ProcessWrapper process) throws IOException {
-		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.directory(getWorkingDirectory().toFile());
-		processBuilder.environment().putAll(getEnvironmentVariables());
-		long pid = process.getPid();
-		if (pid > 0 && kill(processBuilder, pid) == 0 && process.waitFor(10, TimeUnit.SECONDS)) {
-			return;
-		}
-		if (pid > 0 && sigkill(processBuilder, pid) == 0 && process.waitFor(10, TimeUnit.SECONDS)) {
-			return;
-		}
-		process.destroy();
-	}
+    @Override
+    protected void doStop(ProcessWrapper process) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	void setExecutable(Path executable) throws IOException {
-		if (!Files.isExecutable(executable)) {
-			Set<PosixFilePermission> permissions = new LinkedHashSet<>(Files.getPosixFilePermissions(executable));
-			permissions.add(PosixFilePermission.OWNER_EXECUTE);
-			permissions.add(PosixFilePermission.GROUP_EXECUTE);
-			permissions.add(PosixFilePermission.OTHERS_EXECUTE);
-			Files.setPosixFilePermissions(executable, permissions);
-		}
-	}
+    void setExecutable(Path executable) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	ProcessWrapper start(String name, ProcessBuilder processBuilder) throws IOException {
-		log.info("[{}] {}", name, String.join(" ", processBuilder.command()));
-		return new DefaultProcessWrapper(name, processBuilder.start());
-	}
+    ProcessWrapper start(String name, ProcessBuilder processBuilder) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	int exec(String name, ProcessBuilder processBuilder) throws IOException {
-		ProcessWrapper process = start(name, processBuilder);
-		process.getStdOut().attach(log::info);
-		process.getStdErr().attach(log::error);
-		return process.waitFor();
-	}
+    int exec(String name, ProcessBuilder processBuilder) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private int kill(ProcessBuilder processBuilder, long pid) throws IOException {
-		String name = getName() + ":kill";
-		List<String> command = new ArrayList<>();
-		command.add("kill");
-		command.add("-SIGINT");
-		command.add(Long.toString(pid));
-		return exec(name, processBuilder.command(command));
-	}
+    private int kill(ProcessBuilder processBuilder, long pid) throws IOException {
+        String name = getName() + ":kill";
+        List<String> command = new ArrayList<>();
+        command.add("kill");
+        command.add("-SIGINT");
+        command.add(Long.toString(pid));
+        return exec(name, processBuilder.command(command));
+    }
 
-	private int sigkill(ProcessBuilder processBuilder, long pid) throws IOException {
-		String name = getName() + ":kill";
-		List<String> command = new ArrayList<>();
-		command.add("kill");
-		command.add("-SIGKILL");
-		command.add(Long.toString(pid));
-		return exec(name, processBuilder.command(command));
-	}
-
+    private int sigkill(ProcessBuilder processBuilder, long pid) throws IOException {
+        String name = getName() + ":kill";
+        List<String> command = new ArrayList<>();
+        command.add("kill");
+        command.add("-SIGKILL");
+        command.add(Long.toString(pid));
+        return exec(name, processBuilder.command(command));
+    }
 }
